@@ -1,4 +1,4 @@
-# [Hyperapp](https://codepen.io/hyperapp)
+# <img src="logo.svg?sanitize=true" height="24" alt="Hyperapp"> [Hyperapp](https://codepen.io/hyperapp)
 
 [![Travis CI](https://img.shields.io/travis/hyperapp/hyperapp/master.svg)](https://travis-ci.org/hyperapp/hyperapp) [![Codecov](https://img.shields.io/codecov/c/github/hyperapp/hyperapp/master.svg)](https://codecov.io/gh/hyperapp/hyperapp) [![npm](https://img.shields.io/npm/v/hyperapp.svg)](https://www.npmjs.org/package/hyperapp) [![Slack](https://hyperappjs.herokuapp.com/badge.svg)](https://hyperappjs.herokuapp.com "Join us")
 
