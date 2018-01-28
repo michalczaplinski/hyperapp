@@ -26,10 +26,20 @@ export function h(name, props) {
     : name(props || {}, children)
 }
 
+
+/**
+ *  what is a patchlock
+ * 
+ * 
+ * 
+ */
+
 export function app(state, actions, view, container) {
-  var patchLock
-  var lifecycle = []
+  var patchLock // Flag that defines if DOM should be locked for updates
+  var lifecycle = [] // ?
   var root = container && container.children[0]
+  
+  // Create a tree of virtual nodes starting from the root element
   var node = vnode(root, [].map)
 
   repaint(init([], (state = copy(state)), (actions = copy(actions))))
@@ -41,7 +51,11 @@ export function app(state, actions, view, container) {
       element && {
         name: element.nodeName.toLowerCase(),
         props: {},
+
+        // Not sure why we are using map.call(arr) here ...?
         children: map.call(element.childNodes, function(element) {
+
+          // nodeType === 3 means that it is a textNode
           return element.nodeType === 3
             ? element.nodeValue
             : vnode(element, map)
@@ -61,6 +75,9 @@ export function app(state, actions, view, container) {
     while ((next = lifecycle.pop())) next()
   }
 
+  /**
+   *  Set a patchlock and immediately force a rerender
+   */
   function repaint() {
     if (!patchLock) {
       patchLock = !patchLock
@@ -68,6 +85,9 @@ export function app(state, actions, view, container) {
     }
   }
 
+  /** 
+   *  Shallowly copy all properties of object `a` to object `b`
+   */
   function copy(a, b) {
     var target = {}
 
@@ -77,6 +97,14 @@ export function app(state, actions, view, container) {
     return target
   }
 
+ /**
+  *  Set an attribute from a deeply nested object into a new object.
+  *  
+  *  @param {Array}  path
+  *  @param {any}    value
+  *  @param {Object} source
+  *  @param {Object} target
+  */
   function set(path, value, source, target) {
     if (path.length) {
       target[path[0]] =
@@ -93,14 +121,29 @@ export function app(state, actions, view, container) {
     return source
   }
 
+/**
+  *  Description
+  *  @param {Array} path 
+  *  @param {Object} slice
+  *  @param {Object} actions
+  */
   function init(path, slice, actions) {
     for (var key in actions) {
       typeof actions[key] === "function"
         ? (function(key, action) {
+            
+            /**
+             * @param {Function|Object} data - I think at least...
+             */
             actions[key] = function(data) {
+
+              // `state` here is the `state` passed to the `app()` constructor
               slice = get(path, state)
 
-              if (typeof (data = action(data)) === "function") {
+              // If the action returns another function then invoke
+              // 
+              var data = action(data)
+              if (typeof data === "function") {
                 data = data(slice, actions)
               }
 
